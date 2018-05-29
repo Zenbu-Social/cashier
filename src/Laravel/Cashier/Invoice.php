@@ -142,7 +142,46 @@ class Invoice {
 	 */
 	public function hasDiscount()
 	{
-		return $this->subtotal > 0 && $this->subtotal != $this->total;
+		return (bool) $this->stripeInvoice->discount > 0;
+
+		// Let's keep the original check here.
+		//return $this->subtotal > 0 && $this->subtotal != $this->total;
+	}
+
+	/**
+	 * Check for tax.
+	 *
+	 * @return boolean
+	 */
+	public function hasTaxPercent()
+	{
+		return (bool) $this->tax_percent > 0;
+	}
+
+	/**
+	 * Get the tax percentage.
+	 *
+	 * @return integer
+	 */
+	public function getTaxPercent()
+	{
+		return $this->tax_percent;
+	}
+
+	/**
+	 * Get the calculated tax amount.
+	 *
+	 * @return integer
+	 */
+	public function getCalculatedTax()
+	{
+		if (!$this->hasTaxPercent()) {
+			return 0;
+		}
+
+		$amount = ($this->getTaxPercent() / 100) * $this->subtotal;
+
+		return $this->billable->formatCurrency($amount);
 	}
 
 	/**
