@@ -106,20 +106,21 @@ class StripeGateway {
 		$this->updateLocalStripeData($customer);
 	}
 
-	/**
-	 * Build the payload for a subscription create / update.
-	 *
-	 * @return array
-	 */
-	protected function buildPayload()
-	{
-		$payload = [
-			'plan' => $this->plan, 'prorate' => $this->prorate,
-			'quantity' => $this->quantity, 'trial_end' => $this->getTrialEndForUpdate(),
-		];
+    /**
+     * Build the payload for a subscription create / update.
+     *
+     * @return array
+     */
+    protected function buildPayload()
+    {
+        $payload = [
+            'plan' => $this->plan, 'prorate' => $this->prorate,
+            'quantity' => $this->quantity, 'trial_end' => $this->getTrialEndForUpdate(),
+            'tax_percent' => !empty($this->tax_percent) ? $this->tax_percent : null,
+        ];
 
-		return $payload;
-	}
+        return $payload;
+    }
 
 	/**
 	 * Swap the billable entity to a new plan.
